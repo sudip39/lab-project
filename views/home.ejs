@@ -1,0 +1,44 @@
+<% include partials/header %>
+<input id="serv-error" type="text" value="<%= error %>" hidden=true>
+<input id="serv-success" type="text" value="<%= success %>" hidden=true>
+<div class="container" style="padding-top:20px;">
+    <div id="carousel-thumb" class="carousel slide carousel-fade carousel-thumbnails" data-ride="carousel">
+        <!--Slides-->
+        <div class="carousel-inner" role="listbox">
+            <div class="carousel-item active">
+                <img class="d-block w-100 h-20" style="width:10%;height:10%;" src="/img/academicBuilding.jpg"  alt="First slide">
+            </div>
+        </div>
+        <!--/.Slides-->
+        <!--Controls-->
+        <a class="carousel-control-prev" href="#carousel-thumb" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+        </a>
+        <a class="carousel-control-next" href="#carousel-thumb" role="button" data-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+        </a>
+      
+    </div>
+    <div class="jumbotron">
+        <p class="lead">
+            This is a simple <b>Mess Management System</b>. It helps to
+            maintain records of daily usage of food items in the mess and
+            calculate daily expenditure on the basics of daily usage.
+        </p>
+        <ul>
+            <li>It allows you to <a href="/newitem">add new item</a></li>
+            <li>There is a section for daily usage <a href="/print">today's bill</a></li>
+            <li>it will automatically generate <a href="/dailybillrecords">monthly bill</a></li>
+            <li>It will automatically maintain storage details <a href="/storage">Storage</a></li>
+        </ul>
+    </div>
+</div>
+
+
+
+
+<!--/Footer-->
+
+<% include partials/footer %>

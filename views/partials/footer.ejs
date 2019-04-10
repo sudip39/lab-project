@@ -1,0 +1,59 @@
+<script src="/js/jquery-3.2.1.min.js"></script>
+<script src="/js/fontawesome-all.min.js"></script>
+<script src="/js/toastr.min.js"></script>
+<script src="/js/popper.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/mdb.min.js"></script>
+
+<script>
+
+ function precision(x)
+ {
+     let m=parseInt(x);
+     let n=parseInt(x*100);
+     let y;
+     y=n-(m*100);
+     y=y*0.01;
+     m=m+y;
+     return m;
+
+ }
+
+ $( document ).ready(function() {
+     if ($("#serv-error")[0]) {
+         let err = $("#serv-error")[0].value;
+         let suc = $("#serv-success")[0].value;
+         if (err !== "")
+             toastr["error"](err);
+         else if (suc !== "")
+             toastr["success"](suc);
+     }
+    })
+</script>
+<div style="padding-top:10em">
+</div>
+<footer class="page-footer indigo center-on-small-only pt-0 fixed-bottom" style="height:40px;">
+
+        <!--Footer Links-->
+
+        <!--/Footer Links-->
+
+        <!--Copyright-->
+        <div class="footer-copyright" style="margin:0;" >
+            <div class="container-fluid" style="margin:0;">
+                
+            </div>
+        </div>
+        <!--/Copyright-->
+
+    </footer>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/js/select2.full.min.js"></script>
+    <script>
+        window.onload = function () {
+            $('select').select2({
+                placeholder: "Select a item"
+            });
+        }
+    </script>
+</body>
+</html>

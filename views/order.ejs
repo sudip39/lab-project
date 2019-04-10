@@ -1,0 +1,128 @@
+<% include partials/header %>
+<div class="md-form" style="margin-top:20px;position:fixed; width:20%; margin-left:10% ">
+    <select id="supId" class="full-width" style="width:100%;" required>
+        <option value='none'>Select supplier name</option>
+        <% for (let i = 0; i < supplier.length; ++i) { %>
+            <option value='<%= supplier[i].dataValues.id %>'><%= supplier[i].dataValues.name %>
+            </option>
+        <% } %>
+    </select>
+</div>
+<br/>
+<br/>
+<br/>
+<div class="md-form" style="position:fixed; width:20%; margin-left:10%" >
+    <select id="items" class="full-width" style="width:100%;">
+        <option value="none">Select an item</option>
+        <% for (let i = 0; i < item.length; ++i) { %>
+            <option value='{"itemId": <%= item[i].dataValues.id %>,
+                            "qtype": "<%= item[i].dataValues.qtype %>",
+                           "price": <%= item[i].dataValues.price %>}'><%= item[i].dataValues.name %>
+            </option>
+        <% } %>
+    </select>
+</div>
+<div class="container myresponsive">
+    <form action="/order" method="post" class="order-form">
+        <input name="supplierId" type="text" value="" required hidden="true" />
+        <div class="container">
+            <div class="md-form">
+                <table id="itemlist" style="width: 100%"></table>
+            </div>
+            <div class="md-form">
+                <input type="checkbox" checked="false" id="orangeForm-date" />
+                <label for="orangeForm-date">Select date manually</label>
+            </div>
+            <input type="text" name="datechecked" hidden="true" />
+            <div class="md-form">
+                <input type="date" id="orangeForm-orderdate" name="orderdate" />
+            </div>
+            <div class="md-form">
+                <i class="fa fa-calendar-minus prefix grey-text"></i>
+                <input type="text" required id="orangeForm-billno" name="billNo" class="form-control" required />
+                <label for="orangeForm-billno">Bill No</label>
+            </div>
+            <div class="md-form">
+                <i class="fa fa-lock prefix grey-text"></i>
+                <input type="password" required id="orangeForm-pass" name="password" class="form-control" required />
+                <label for="orangeForm-pass">Your password</label>
+            </div>
+            <div class="text-center">
+                <button id="sub" class="btn btn-default">Submit</button>
+            </div>
+        </div>
+    </form>
+</div>
+<% include partials/footer %>
+<script type="text/javascript">
+ let i = 0;
+
+ $(document).ready(function () {
+
+     $("#orangeForm-date")[0].checked = false;
+     $("input[name=datechecked]").val("false");
+     $("#orangeForm-orderdate").prop('required', false);
+     $("#orangeForm-orderdate").hide();
+
+     $("#orangeForm-date").change(function () {
+         if (this.checked == true) {
+             $("input[name=datechecked]").val("true");
+             $("#orangeForm-orderdate").prop('required', true);
+             $('#orangeForm-orderdate').show();
+         } else {
+             $("input[name=datechecked]").val("false");
+             $("#orangeForm-orderdate").prop('required', false);
+             $('#orangeForm-orderdate').hide();
+         }
+     });
+
+     function disableSubmit() {
+         if ($("select#supId").val() == 'none' || $("table#itemlist").children().length == 0)
+             btn.disabled = true;
+         else
+             btn.disabled = false;
+     }
+
+     $("select#supId").change(function () {
+         let x = $(this).val();
+         $("input[name='supplierId']").val('' + x);
+         disableSubmit();
+     })
+
+     $("select#items").change(function () {
+         let current = $(this).children(":selected");
+         if (current == 'none')
+             return 0;
+         let currentVal = JSON.parse(current.val());
+         let rate = parseFloat(currentVal.price);
+         let id = parseFloat(currentVal.itemId);
+         let type = currentVal.qtype;
+         $("table").append("<tr><td>" + current.text() + "</td><td>" +
+                           "<input hidden='true' type='text' " + "name='item[" + i + "][itemId]' value =" + id + " />" +
+                           "<input hidden='true' type='text' name='item[" + i + "][rate]'" + " value='" + rate + "' />" +
+                           "<div class='md-form'>" +
+                           "<input type='text' required id='orangeForm-"+i+"' name='item[" + i + "][qty]' " + " autocomplete='off' required />" +
+                           "<label for='orangeForm-"+i+"'>Quantity</label>" +
+                           "</div></td>" +
+                           "<td>"+
+                           "<h4>"+
+                           type +
+                           "</h4>"+
+                           "</td>"+
+                           "<td><div class='md-form'>" +
+                           "<a class='remove-btn btn-floating btn-sm btn-danger'>" +
+                           "<i class='fa fa-times ' style='margin-top:30%;margin-left:35%;' ></i></a>" +
+                           "</div></td></tr>");
+         i++;
+         disableSubmit();
+     });
+     let btn = $("button#sub")[0]
+     btn.disabled = true;
+     $(document).on('click', '.remove-btn', function(e) {
+         e.preventDefault();
+         row = $(this).parent().parent().parent().remove();
+         $(this).remove();
+         disableSubmit();
+     });
+ });
+</script>

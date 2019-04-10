@@ -1,0 +1,112 @@
+<% include partials/header %>
+
+<div class="container table-container">
+    <form action="/itemperday" method="post">
+        <table class="table ">
+            <thead>
+                <tr>
+
+                    <th>Item Name</th>
+                    <th>Quantity</th>
+                </tr>
+            </thead>
+            <tbody >
+                <% for (let i = 0; i < rate.length; ++i) { %>
+                    <% if(rate[i].dataValues.common==1) {%>
+                        <tr>
+                            <td class="addtocart"><%= rate[i].dataValues.name %></td>
+                            <td>
+                                <input type="text" name="item[<%= i %>][itemId]" value="<%= rate[i].dataValues.id %>" hidden=true>
+                                <input type="text" onblur="addVal(<%= i %>)" name="item[<%= i %>][qty]" value="0">
+                            </td>
+                            <td>Rs<%= rate[i].dataValues.price %>/<%= rate[i].dataValues.qtype %></td>
+                        </tr>
+                    <% } %>
+                <% } %>
+            </tbody>
+        </table>
+        <div class="md-form">
+            <table class="uncommon" style="width: 100%"></table>
+        </div>
+        <div class="md-form"   >
+            <select id="items" class="full-width" style="width:100%;">
+                <option value="none">Select an item</option>
+                <% for (let i = 0; i < rate.length; ++i) { %>
+                    <% if(rate[i].dataValues.common==0) {%>
+                        <option value='{"itemId": <%= rate[i].dataValues.id %>,
+                                        "qtype": "<%= rate[i].dataValues.qtype %>",
+                                       "price": <%= rate[i].dataValues.price %>}'><%= rate[i].dataValues.name %>
+                        </option>
+                    <% } %>
+                <% } %>
+            </select>
+        </div>
+        <div class="md-form">
+            <i class="fa fa-lock prefix grey-text"></i>
+            <input type="password" required id="orangeForm-pass" name="password" class="form-control">
+            <label for="orangeForm-pass">Your password</label>
+        </div>
+        <div class="text-center">
+            <button class="btn btn-default">Submit</button>
+        </div>
+    </form>
+</div>
+
+<% include partials/footer %>
+<script>
+
+ let k=0;
+ function addVal(event){
+    let valObj=$("input[name='item["+event+"][qty]'");
+    let value=valObj.val();
+    value=value.replace(/[^-()\d/*+.]/g, '');
+    value=eval(value);
+    valObj.val(value);
+
+ }
+ function addValu(event){
+    let valObj=$("input[name='uitem["+event+"][qty]'");
+    let value=valObj.val();
+    value=eval(value);
+    valObj.val(value);
+
+ }
+ console.log(k);
+ $('document').ready(function(){
+     
+     $("select#items").change(function () {
+         let current = $(this).children(":selected");
+         if (current == 'none')
+             return 0;
+
+         let currentVal = JSON.parse(current.val());
+         let rate = parseFloat(currentVal.price);
+         let id = parseFloat(currentVal.itemId);
+         let type = currentVal.qtype;
+         $("table.uncommon").append("<tr><td>" + current.text() + "</td><td>" +
+                                    "<input hidden='true' type='text' " + "name='uitem[" + k + "][itemId]' value =" + id + " >" +
+                                    "<div class='md-form'>" +
+                                    "<label for='orangeForm-"+k+"'>Quantity</label>" +
+                                    "<input type='text' onblur=addValu("+k +") required id='orangeForm-"+k+"' name='uitem[" + k + "][qty]' " + " autocomplete='off' required />" +
+                                    "</div></td>" +
+                                    "<td>"+
+                                        "<h4>"+
+                                        type +
+                                    "</h4>"+
+                                        "</td>"+
+                                        "<td><div class='md-form'>" +
+                                    "<a class=' remove-btn btn-floating btn-sm btn-danger'>" +
+                                    "<i class='fa fa-times'  style='margin-top:30%;margin-left:35%;'></i></a>" +
+                                    "</div></td></tr>");
+         k++;
+     })
+
+     $(document).on('click', '.remove-btn', function(e) {
+         e.preventDefault();
+         $(this).parent().parent().parent().remove();
+         $(this).remove();
+     })
+   
+
+ })
+</script>

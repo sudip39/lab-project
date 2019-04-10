@@ -1,0 +1,29 @@
+{
+  "name": "mess_management",
+  "version": "1.0.0",
+  "description": "Mess Management in college",
+  "main": "index.js",
+  "scripts": {
+    "start": "node ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "yes"
+  },
+  "author": "Sudip Saha",
+  "license": "MIT",
+  "dependencies": {
+    "node":"^8.10.0",
+    "bcrypt": "^1.0.3",
+    "body-parser": "^1.18.2",
+    "ejs": "^2.5.7",
+    "express": "^4.16.2",
+    "jquery": "^3.3.1",
+    "materialize": "^1.0.0",
+    "mysql": "^2.15.0",
+    "mysql2": "^1.5.1",
+    "passport-local-sequelize": "^0.8.0",
+    "sequelize": "^4.32.1"
+    
+  }
+}

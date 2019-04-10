@@ -1,0 +1,101 @@
+<% include ./partials/header %>
+
+
+<div class="container">
+    <div class="md-form" style="margin-left:10%; margin-top:3%; width:20%; float:left;display:inline-block;">
+        <select name="month" id="month" style="width:100%;">
+            <option value="1">January</option>
+            <option value="2">February</option>
+            <option value="3">March</option>
+            <option value="4">April</option>
+            <option value="5">August</option>
+            <option value="6">May</option>
+            <option value="7">June</option>
+            <option value="8">July</option>
+            <option value="9">August</option>
+            <option value="10">September</option>
+            <option value="11">October</option>
+            <option value="12">November</option>
+        </select>
+    </div>
+
+    <div class="md-form"style="margin-left:5%; margin-top:3%; width:20%; float:left;display:inline-block;">
+        <select  id="year" style="width:100%; text-align:center;"></select>
+    </div>
+    <div class="md-form"style="margin-top:1%;  float:left;display:inline-block;">
+            <button id="getbill" class="btn btn-info" type="submit">search</button>
+    </div>
+</div>
+<div class="container table-container">
+    <table class="table"></table>
+</div>
+<% include ./partials/footer %>
+<script>
+
+ function precision(x)
+ {
+     let m=parseInt(x);
+     let n=parseInt(x*100);
+     let y;
+     y=n-(m*100);
+     y=y*0.01;
+     m=m+y;
+     return m;
+
+ }
+ document.addEventListener('DOMContentLoaded', function () {
+     var start = 2018;
+     var end = new Date().getFullYear();
+     var options = "";
+     for(var year = start ; year <=end; year++){
+         options += "<option>"+ year +"</option>";
+     }
+     document.getElementById("year").innerHTML = options;
+ });
+ $(document).ready(function() {
+     let year = "2018";
+     let month = "1";
+
+     $('select#year').change(function(){
+         year= $(this).val();
+     })
+     $('select#month').change(function(){
+         month=$(this).val();
+     });
+     $("button#getbill").on("click", function () {
+         $.ajax({
+             type: 'GET',
+             url: '/actualbill/'+month+'/'+year,
+             success: function(result) {
+                $('table').empty();
+                 if(result.bill.name.length==0)
+                 {
+                    toastr["error"]("No records Found");
+                    setTimeout(function(){
+                        toastr.clear();
+                    },1500);
+
+                    return;
+                 }
+
+                 var theaders="<thead><th>Reasons</th><th>Bills</th> </thead>"
+                 var tbodys=theaders+"<tbody>";
+
+                 for(let i=0;i<result.bill.name.length;i++)
+                     {
+                         tbodys+="<tr><td>"+result.bill.name[i]+" </td><td>"+precision(result.bill.total[i])+"</td></tr>";
+                     }
+                 console.log(result.esum);
+                 console.log(result.wsum);
+
+                 tbodys+="<tr><td>Extra Charges</td><td>"+ result.esum+"</td></tr>";
+                 tbodys+="<tr><td>Total Bill</td><td>"+precision(result.bill.sum+result.esum)+"</td></tr>";
+                 tbodys+="</tbody>";
+                 $('table').empty().append(tbodys);
+             }
+         });
+
+     });
+ });
+
+</script>
